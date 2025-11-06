@@ -1,0 +1,210 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "parameters": {
+    "vnetName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the hub VNet."
+      }
+    },
+    "vnetResourceGroup": {
+      "type": "string",
+      "metadata": {
+        "description": "The resource group of the hub VNet."
+      }
+    },
+    "subnetName": {
+      "type": "string",
+      "metadata": {
+        "description": "The name of the subnet for the private endpoint and SLB."
+      }
+    },
+    "onPremDatabaseIP": {
+      "type": "string",
+      "metadata": {
+        "description": "The private IP address of the on-premise database."
+      }
+    },
+    "onPremDomainName": {
+      "type": "string",
+      "metadata": {
+        "description": "The private domain name of the on-premise network (e.g., corp.local)."
+      }
+    },
+    "onPremDNSServerIP1": {
+      "type": "string",
+      "metadata": {
+        "description": "The IP address of the first on-premise DNS server."
+      }
+    },
+    "onPremDNSServerIP2": {
+      "type": "string",
+      "metadata": {
+        "description": "The IP address of the second on-premise DNS server."
+      }
+    },
+    "databasePort": {
+      "type": "int",
+      "metadata": {
+        "description": "The port of the on-premise database (e.g., 1433 for SQL Server)."
+      }
+    },
+    "privateLinkServiceAlias": {
+      "type": "string",
+      "metadata": {
+        "description": "A unique alias for the Private Link Service."
+      }
+    }
+  },
+  "variables": {
+    "location": "[resourceGroup().location]",
+    "subnetId": "[resourceId(parameters('vnetResourceGroup'), 'Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), parameters('subnetName'))]"
+  },
+  "resources": [
+    {
+      "type": "Microsoft.Network/loadBalancers",
+      "apiVersion": "2020-11-01",
+      "name": "snowflake-onprem-slb",
+      "location": "[variables('location')]",
+      "sku": {
+        "name": "Standard"
+      },
+      "properties": {
+        "frontendIPConfigurations": [
+          {
+            "name": "slb-frontend",
+            "properties": {
+              "privateIPAllocationMethod": "Dynamic",
+              "subnet": {
+                "id": "[variables('subnetId')]"
+              }
+            }
+          }
+        ],
+        "backendAddressPools": [
+          {
+            "name": "slb-backend-pool"
+          }
+        ],
+        "loadBalancingRules": [
+          {
+            "name": "slb-rule",
+            "properties": {
+              "frontendIPConfiguration": {
+                "id": "[resourceId('Microsoft.Network/loadBalancers/frontendIPConfigurations', 'snowflake-onprem-slb', 'slb-frontend')]"
+              },
+              "backendAddressPool": {
+                "id": "[resourceId('Microsoft.Network/loadBalancers/backendAddressPools', 'snowflake-onprem-slb', 'slb-backend-pool')]"
+              },
+              "protocol": "Tcp",
+              "frontendPort": "[parameters('databasePort')]",
+              "backendPort": "[parameters('databasePort')]",
+              "probe": {
+                "id": "[resourceId('Microsoft.Network/loadBalancers/probes', 'snowflake-onprem-slb', 'slb-probe')]"
+              },
+              "enableFloatingIP": true
+            }
+          }
+        ],
+        "probes": [
+          {
+            "name": "slb-probe",
+            "properties": {
+              "protocol": "Tcp",
+              "port": "[parameters('databasePort')]"
+            }
+          }
+        ]
+      }
+    },
+    {
+      "type": "Microsoft.Network/privateLinkServices",
+      "apiVersion": "2020-11-01",
+      "name": "snowflake-onprem-pls",
+      "location": "[variables('location')]",
+      "properties": {
+        "autoApproval": {
+          "subscriptions": []
+        },
+        "visibility": {
+          "subscriptions": []
+        },
+        "fqdns": [
+            "private-link-service-dns"
+        ],
+        "alias": "[parameters('privateLinkServiceAlias')]",
+        "loadBalancerFrontendIpConfigurations": [
+          {
+            "id": "[resourceId('Microsoft.Network/loadBalancers/frontendIPConfigurations', 'snowflake-onprem-slb', 'slb-frontend')]"
+          }
+        ]
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/loadBalancers', 'snowflake-onprem-slb')]"
+      ]
+    },
+    {
+      "type": "Microsoft.Network/dnsResolvers/outboundEndpoints",
+      "apiVersion": "2022-07-01",
+      "name": "onprem-dns-outbound-endpoint",
+      "location": "[variables('location')]",
+      "properties": {
+        "subnet": {
+          "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', parameters('vnetName'), 'DnsResolverOutboundSubnet')]"
+        }
+      }
+    },
+    {
+      "type": "Microsoft.Network/dnsForwardingRulesets",
+      "apiVersion": "2022-07-01",
+      "name": "onprem-dns-ruleset",
+      "location": "[variables('location')]",
+      "properties": {
+        "forwardingRules": {
+          "onprem-dns-forwarding-rule": {
+            "domainName": "[parameters('onPremDomainName')]",
+            "enableLogging": true,
+            "forwardingRuleState": "Enabled",
+            "targetDnsServers": [
+              {
+                "ipAddress": "[parameters('onPremDNSServerIP1')]",
+                "port": 53
+              },
+              {
+                "ipAddress": "[parameters('onPremDNSServerIP2')]",
+                "port": 53
+              }
+            ]
+          }
+        }
+      },
+      "dependsOn": [
+        "[resourceId('Microsoft.Network/dnsResolvers/outboundEndpoints', 'onprem-dns-outbound-endpoint')]"
+      ]
+    },
+    {
+      "type": "Microsoft.Network/networkSecurityGroups",
+      "apiVersion": "2020-11-01",
+      "name": "snowflake-onprem-nsg",
+      "location": "[variables('location')]",
+      "properties": {
+        "securityRules": [
+          {
+            "name": "AllowSnowflakeTraffic",
+            "properties": {
+              "priority": 100,
+              "access": "Allow",
+              "direction": "Inbound",
+              "protocol": "Tcp",
+              "sourceAddressPrefix": "192.168.0.0/16",
+              "sourcePortRange": "*",
+              "destinationAddressPrefix": "10.1.0.0/24",
+              "destinationPortRange": "[string(parameters('databasePort'))]"
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

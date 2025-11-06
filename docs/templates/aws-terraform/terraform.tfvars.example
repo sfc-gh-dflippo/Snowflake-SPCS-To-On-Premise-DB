@@ -1,0 +1,21 @@
+# Copy this file to "terraform.tfvars" and fill in your values.
+# Use the instructions in 'variables.tf' to find each value.
+
+aws_region                = "us-east-1"
+vpc_id                    = "vpc-..."
+subnet_id_1               = "subnet-..."
+subnet_id_2               = "subnet-..."
+route_table_id_1          = "rtb-..."
+route_table_id_2          = "rtb-..."
+on_prem_database_ip       = "10.50.10.100"
+on_prem_cidr              = "10.50.0.0/16"
+on_prem_dns_server_ip_1   = "10.50.1.10"
+on_prem_dns_server_ip_2   = "10.50.1.11"
+transit_gateway_id        = "tgw-..."
+snowflake_vpc_cidr        = "54.10.0.0/24" # <-- Get this from Snowflake!
+
+# You can leave these commented out to use the defaults for SQL Server
+# on_prem_domain_name     = "corp.local"
+# database_port           = 1433
+
+```

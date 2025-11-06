@@ -1,0 +1,33 @@
+# Azure Terraform Variables Example
+# Copy this file to terraform.tfvars and fill in your values
+
+# Resource naming
+resource_group_name = "snowflake-privatelink-rg"
+vnet_name           = "snowflake-vnet"
+subnet_name         = "snowflake-subnet"
+load_balancer_name  = "snowflake-lb"
+private_link_service_name = "snowflake-pls"
+
+# Azure region
+location = "West US 2"
+
+# Network configuration
+vnet_address_space    = ["10.0.0.0/16"]
+subnet_address_prefix = "10.0.1.0/24"
+
+# On-premise database configuration
+on_premise_database_ip   = "192.168.1.10"  # Replace with your database IP
+on_premise_database_port = 3306            # Replace with your database port
+
+# Snowflake configuration
+# IMPORTANT: Get this from your Snowflake administrator
+snowflake_subscription_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+
+# Optional: Custom tags
+tags = {
+  Project     = "Snowflake-PrivateLink"
+  ManagedBy   = "Terraform"
+  Environment = "Production"
+  CostCenter  = "IT"
+}
+
