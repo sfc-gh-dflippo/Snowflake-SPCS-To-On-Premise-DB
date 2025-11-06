@@ -1,0 +1,808 @@
+<context>
+# Overview
+
+This PRD defines comprehensive review and validation requirements for the Snowflake SPCS to on-premise database connectivity documentation. The review must validate technical accuracy against official sources, verify template functionality through deployment testing, and ensure documentation completeness.
+
+## Review Scope
+
+The review covers:
+- 6 main documentation chapters (01-06)
+- 4 Infrastructure as Code template projects
+- 10 architectural screenshots
+- 3 supporting documentation files
+- All configuration files and examples
+
+Total documentation artifacts: Approximately 3,500 lines across 20+ files
+
+## Validation Approach
+
+Each document and template must be:
+1. **Verified Against Sources**: Every technical claim cross-referenced with footnoted sources
+2. **Logically Validated**: Steps follow correct sequence, no gaps in procedures
+3. **Functionally Tested**: Commands work as documented, templates deploy successfully
+4. **Completeness Checked**: All necessary information present, no assumptions made
+5. **Best Practices Reviewed**: Implementation follows cloud provider and Snowflake guidance
+
+## Quality Standards
+
+Reviews must identify:
+- Factual errors or outdated information
+- Missing steps in procedures
+- Incorrect commands or configurations
+- Broken or inaccessible reference links
+- Screenshots not matching current UI
+- Logic gaps in architectural explanations
+- Security concerns or misconfigurations
+- Cost optimization opportunities
+- Deviations from best practices
+
+## Success Criteria
+
+Upon completion:
+- All footnoted sources verified and accessible
+- All commands tested and confirmed working
+- All templates deployable in sandbox environments
+- All screenshots validated against current UIs
+- No logical gaps in any procedure
+- Best practices documented throughout
+- Zero critical errors remaining
+</context>
+
+<PRD>
+# Documentation Review and Validation Requirements
+
+## Chapter 1: Executive Summary Review
+
+### Review Task 1A: Problem Statement Validation
+**Objective**: Verify the problem statement accurately describes the SPCS to on-premise connectivity challenge
+
+**Requirements**:
+- Validate that SPCS services default behavior is accurately described
+- Verify problem statement aligns with Snowflake official documentation
+- Check that business impact is realistically portrayed
+- Confirm examples resonate with real-world scenarios
+- Validate all claims against footnoted sources
+
+**Validation Steps**:
+1. Cross-reference problem description with Snowflake SPCS documentation
+2. Verify footnote citations point to relevant Snowflake docs
+3. Check that technical terminology is used correctly
+4. Confirm security concerns are accurately stated
+5. Validate that no alternative solutions are misrepresented
+
+**Acceptance Criteria**:
+- All technical claims backed by verifiable sources
+- Problem severity accurately reflects industry experience
+- No misleading or exaggerated statements
+- Terminology matches Snowflake official documentation
+
+### Review Task 1B: Solution Architecture Overview
+**Objective**: Validate the proposed solution architecture is sound and achievable
+
+**Requirements**:
+- Verify solution components are correctly identified
+- Validate architecture aligns with cloud provider best practices
+- Check that all necessary components are mentioned
+- Confirm solution addresses the stated problem completely
+- Validate high-level architecture accuracy
+
+**Validation Steps**:
+1. Compare solution approach with AWS and Azure reference architectures
+2. Verify PrivateLink capabilities are accurately described
+3. Check DNS resolution approach is technically sound
+4. Validate load balancing strategy is appropriate
+5. Confirm all components are necessary and properly utilized
+
+**Acceptance Criteria**:
+- Solution is technically feasible as described
+- No critical components missing from overview
+- Architecture follows cloud provider best practices
+- Solution scales to handle production workloads
+
+## Chapter 2: Architectural Pattern Review
+
+### Review Task 2A: Connectivity Chain Validation
+**Objective**: Verify the complete connectivity chain is logically sound and accurately documented
+
+**Requirements**:
+- Validate each hop in the connectivity chain
+- Verify network flow diagrams are accurate
+- Check that DNS resolution path is correct
+- Confirm load balancing behavior is properly described
+- Validate PrivateLink functionality is accurately explained
+
+**Validation Steps**:
+1. Trace request path from SPCS to on-premise database step-by-step
+2. Verify each network component's role and necessity
+3. Check DNS query resolution flow for accuracy
+4. Validate load balancer health check behavior
+5. Confirm PrivateLink connectivity establishment process
+
+**Acceptance Criteria**:
+- Every hop in connectivity chain is necessary and correct
+- Network diagrams match described architecture
+- DNS resolution logic is sound
+- No gaps in connection establishment sequence
+
+### Review Task 2B: External Access Integration Framework
+**Objective**: Validate EAI documentation aligns with Snowflake capabilities and limitations
+
+**Requirements**:
+- Verify EAI functionality is correctly described
+- Validate security model documentation
+- Check that limitations are acknowledged
+- Confirm configuration approach is accurate
+- Validate integration with SPCS services
+
+**Validation Steps**:
+1. Cross-reference EAI description with Snowflake documentation
+2. Verify allowed and blocked domains functionality
+3. Check secret management approach is documented correctly
+4. Validate EAI assignment to Openflow runtime procedure
+5. Confirm networking mode implications
+
+**Acceptance Criteria**:
+- EAI capabilities accurately reflect Snowflake documentation
+- Security implications properly documented
+- Configuration steps align with Snowflake procedures
+- Limitations clearly stated
+
+## Chapter 3: AWS Implementation Review
+
+### Review Task 3A: Network Load Balancer Configuration
+**Objective**: Validate NLB setup instructions are complete and accurate
+
+**Requirements**:
+- Verify NLB type selection (Network, internal)
+- Validate target group configuration
+- Check health check settings
+- Confirm subnet selection guidance
+- Validate security considerations
+
+**Validation Steps**:
+1. Compare NLB configuration with AWS best practices documentation
+2. Verify target group type (IP targets) is correct for use case
+3. Check health check protocol and timing parameters
+4. Validate cross-zone load balancing recommendation
+5. Test NLB configuration steps against AWS Console UI
+6. Verify all AWS CLI commands are syntactically correct
+7. Check that screenshots match current AWS Console (Nov 2025)
+
+**Acceptance Criteria**:
+- NLB configuration follows AWS best practices
+- Target group health checks will detect database issues
+- All CLI commands execute successfully
+- Screenshots accurately represent current UI
+- No configuration steps missing
+
+### Review Task 3B: VPC Endpoint Service Setup
+**Objective**: Validate VPC Endpoint Service configuration for PrivateLink
+
+**Requirements**:
+- Verify service name format and accessibility
+- Validate acceptance requirements configuration
+- Check principal allowlist setup
+- Confirm service availability in required regions
+- Validate DNS name generation
+
+**Validation Steps**:
+1. Cross-reference configuration with AWS PrivateLink documentation
+2. Verify manual acceptance requirement rationale
+3. Check Snowflake account ID format and source
+4. Validate service name format matches AWS patterns
+5. Test that service configuration allows Snowflake connections
+6. Verify all AWS CLI commands for endpoint service creation
+7. Check screenshot accuracy for VPC Endpoint Service console
+
+**Acceptance Criteria**:
+- Service configuration enables Snowflake connectivity
+- Security settings prevent unauthorized access
+- Service name can be provided to Snowflake successfully
+- All commands tested and working
+
+### Review Task 3C: Route 53 Resolver and DNS Configuration
+**Objective**: Validate hybrid DNS configuration for on-premise resolution
+
+**Requirements**:
+- Verify resolver endpoint configuration (outbound)
+- Validate forwarding rules setup
+- Check domain name patterns
+- Confirm on-premise DNS server accessibility
+- Validate rule association with VPC
+
+**Validation Steps**:
+1. Cross-reference with AWS Route 53 Resolver documentation
+2. Verify outbound endpoint subnet requirements
+3. Check forwarding rule domain pattern syntax
+4. Validate DNS server IP address format
+5. Test resolver configuration logic
+6. Verify security group rules for DNS traffic
+7. Check all AWS CLI commands for DNS configuration
+
+**Acceptance Criteria**:
+- DNS queries forward correctly to on-premise
+- Resolver endpoint has appropriate network access
+- Forwarding rules match on-premise domain structure
+- Security groups allow DNS traffic
+
+## Chapter 4: Azure Implementation Review
+
+### Review Task 4A: Standard Load Balancer Configuration
+**Objective**: Validate Azure Load Balancer setup for Private Link Service
+
+**Requirements**:
+- Verify Standard SKU selection (required for Private Link)
+- Validate backend pool configuration
+- Check health probe settings
+- Confirm load balancing rules
+- Validate frontend IP configuration
+
+**Validation Steps**:
+1. Compare configuration with Azure Load Balancer documentation
+2. Verify Standard SKU requirement for Private Link Service
+3. Check health probe protocol and frequency
+4. Validate backend pool can reach on-premise database
+5. Test load balancer configuration against Azure Portal UI
+6. Verify all Azure CLI commands are syntactically correct
+7. Check that screenshots match current Azure Portal (Nov 2025)
+
+**Acceptance Criteria**:
+- Load balancer SKU supports Private Link Service
+- Health probes will detect database availability
+- All CLI commands execute successfully
+- Screenshots match current Portal interface
+- Configuration follows Azure best practices
+
+### Review Task 4B: Private Link Service Setup
+**Objective**: Validate Private Link Service configuration for Snowflake connectivity
+
+**Requirements**:
+- Verify service association with load balancer
+- Validate visibility and auto-approval settings
+- Check Snowflake subscription ID configuration
+- Confirm NAT IP configuration
+- Validate service alias generation
+
+**Validation Steps**:
+1. Cross-reference with Azure Private Link documentation
+2. Verify load balancer frontend association is correct
+3. Check Snowflake subscription ID format and source
+4. Validate visibility restriction to Snowflake subscription
+5. Test that service alias can be provided to Snowflake
+6. Verify all Azure CLI commands for Private Link Service
+7. Check screenshot accuracy for Private Link Service UI
+
+**Acceptance Criteria**:
+- Service properly connects to load balancer
+- Only Snowflake subscription can create private endpoint
+- Service alias format is correct
+- All commands tested and working
+
+### Review Task 4C: DNS Private Resolver Configuration
+**Objective**: Validate Azure DNS Private Resolver for hybrid DNS
+
+**Requirements**:
+- Verify resolver deployment in correct VNet
+- Validate outbound endpoint configuration
+- Check forwarding ruleset setup
+- Confirm rule association with VNet
+- Validate target DNS servers
+
+**Validation Steps**:
+1. Cross-reference with Azure DNS Private Resolver documentation
+2. Verify outbound endpoint subnet requirements
+3. Check forwarding rule domain patterns
+4. Validate on-premise DNS server accessibility
+5. Test resolver configuration logic
+6. Verify NSG rules allow DNS traffic
+7. Check all Azure CLI commands for DNS configuration
+
+**Acceptance Criteria**:
+- DNS queries forward to on-premise successfully
+- Resolver has appropriate network connectivity
+- Forwarding rules match domain requirements
+- NSGs allow DNS traffic
+
+## Chapter 5: SPCS Setup Review
+
+### Review Task 5A: External Access Integration SQL Validation
+**Objective**: Verify Snowflake SQL commands for EAI creation are correct
+
+**Requirements**:
+- Validate CREATE EXTERNAL ACCESS INTEGRATION syntax
+- Verify allowed network rules format
+- Check blocked network rules if applicable
+- Confirm secret references if used
+- Validate ENABLED property
+
+**Validation Steps**:
+1. Cross-reference SQL syntax with Snowflake documentation
+2. Verify network rule format (VPC endpoint service name or alias)
+3. Check that rule format matches AWS vs Azure requirements
+4. Validate command will execute without errors
+5. Test SQL statements in Snowflake environment
+6. Verify footnote references to Snowflake SQL documentation
+
+**Acceptance Criteria**:
+- SQL syntax is correct for current Snowflake version
+- Network rules use correct format for cloud provider
+- Commands execute successfully in Snowflake
+- All options properly documented
+
+### Review Task 5B: Openflow Configuration Procedures
+**Objective**: Validate Openflow setup and EAI assignment steps
+
+**Requirements**:
+- Verify Openflow runtime creation procedure
+- Validate EAI assignment steps
+- Check connection configuration
+- Confirm database connection string format
+- Validate testing procedures
+
+**Validation Steps**:
+1. Cross-reference with Openflow documentation
+2. Verify UI navigation steps match current interface
+3. Check that EAI assignment procedure is complete
+4. Validate database connection string format
+5. Test connection validation steps
+6. Verify screenshots match current Openflow UI
+
+**Acceptance Criteria**:
+- Openflow configuration steps are complete
+- EAI assigns successfully to runtime
+- Connection strings use correct format
+- Testing procedure confirms connectivity
+
+### Review Task 5C: End-to-End Validation
+**Objective**: Verify end-to-end testing procedures confirm complete connectivity
+
+**Requirements**:
+- Validate test query approach
+- Verify error handling guidance
+- Check troubleshooting steps
+- Confirm success indicators
+- Validate rollback procedures if needed
+
+**Validation Steps**:
+1. Review test query logic for completeness
+2. Verify error messages are accurately documented
+3. Check troubleshooting steps address common issues
+4. Validate success criteria are measurable
+5. Test that validation procedure would catch misconfigurations
+
+**Acceptance Criteria**:
+- Test procedure validates full connectivity path
+- Common errors have documented resolutions
+- Success criteria are clear and measurable
+- Troubleshooting addresses likely failure points
+
+## Chapter 6: References Review
+
+### Review Task 6A: Citation Verification
+**Objective**: Verify all footnote references are accurate and accessible
+
+**Requirements**:
+- Check all URLs are accessible
+- Verify citation accuracy
+- Validate reference relevance
+- Confirm no broken links
+- Check reference date/version information
+
+**Validation Steps**:
+1. Test every URL in references chapter
+2. Verify URLs point to expected content
+3. Check that citations support the claims they reference
+4. Validate official documentation versions are current
+5. Confirm community resources are from reputable sources
+6. Check for dead links or paywalled content
+
+**Acceptance Criteria**:
+- 100% of URLs are accessible
+- All citations support their referenced claims
+- Official docs are reasonably current
+- No broken links or inaccessible resources
+
+## Template Validation Tasks
+
+### Review Task 7A: AWS CloudFormation Template Validation
+**Objective**: Validate CloudFormation template deploys successfully and matches documentation
+
+**Requirements**:
+- Verify YAML syntax and structure
+- Validate all parameters are documented
+- Check resource definitions are complete
+- Confirm outputs match documentation
+- Test deployment in sandbox environment
+
+**Validation Steps**:
+1. Validate YAML syntax using CloudFormation validation
+2. Review each parameter definition for completeness
+3. Check resource configurations against AWS best practices
+4. Verify outputs provide necessary information
+5. Deploy stack in test AWS account
+6. Validate deployed resources match documentation
+7. Check README instructions are accurate and complete
+8. Test stack deletion procedure
+
+**Acceptance Criteria**:
+- Template passes CloudFormation validation
+- Stack deploys successfully without errors
+- All parameters have clear descriptions
+- Outputs match Chapter 3 documentation
+- README is accurate and complete
+- Stack deletes cleanly
+
+### Review Task 7B: AWS Terraform Configuration Validation
+**Objective**: Validate AWS Terraform project is production-ready and functional
+
+**Requirements**:
+- Verify all .tf files have correct syntax
+- Validate variable descriptions match usage
+- Check outputs align with documentation
+- Confirm terraform.tfvars.example is complete
+- Test terraform workflow (init, plan, apply)
+
+**Validation Steps**:
+1. Run `terraform validate` on all files
+2. Review variable definitions for completeness
+3. Check output values match Chapter 3
+4. Verify terraform.tfvars.example has all required variables
+5. Test `terraform init` initialization
+6. Run `terraform plan` and review planned changes
+7. Deploy with `terraform apply` in test AWS account
+8. Verify deployed infrastructure matches documentation
+9. Check README deployment instructions
+10. Test `terraform destroy` cleanup
+
+**Acceptance Criteria**:
+- All files pass terraform validate
+- Variables fully documented with types and descriptions
+- Example tfvars file is complete and accurate
+- Terraform deploys successfully
+- Deployed resources match Chapter 3 documentation
+- README is accurate and tested
+- Destruction removes all resources
+
+### Review Task 7C: Azure ARM Template Validation
+**Objective**: Validate ARM template deploys successfully and matches documentation
+
+**Requirements**:
+- Verify JSON syntax and structure
+- Validate all parameters are documented
+- Check resource definitions are complete
+- Confirm outputs match documentation
+- Test deployment in sandbox environment
+
+**Validation Steps**:
+1. Validate JSON syntax using ARM template validation
+2. Review each parameter definition for completeness
+3. Check resource configurations against Azure best practices
+4. Verify outputs provide necessary information
+5. Deploy template in test Azure subscription
+6. Validate deployed resources match documentation
+7. Check README instructions are accurate and complete
+8. Test resource deletion procedure
+
+**Acceptance Criteria**:
+- Template passes ARM validation
+- Deployment succeeds without errors
+- All parameters have clear descriptions
+- Outputs match Chapter 4 documentation
+- README is accurate and complete
+- Resources delete cleanly
+
+### Review Task 7D: Azure Terraform Configuration Validation
+**Objective**: Validate Azure Terraform project is production-ready and functional
+
+**Requirements**:
+- Verify all .tf files have correct syntax
+- Validate variable descriptions match usage
+- Check outputs align with documentation
+- Confirm terraform.tfvars.example is complete
+- Test terraform workflow (init, plan, apply)
+
+**Validation Steps**:
+1. Run `terraform validate` on all files
+2. Review variable definitions for completeness
+3. Check output values match Chapter 4
+4. Verify terraform.tfvars.example has all required variables
+5. Test `terraform init` initialization
+6. Run `terraform plan` and review planned changes
+7. Deploy with `terraform apply` in test Azure subscription
+8. Verify deployed infrastructure matches documentation
+9. Check README deployment instructions
+10. Test `terraform destroy` cleanup
+
+**Acceptance Criteria**:
+- All files pass terraform validate
+- Variables fully documented with types and descriptions
+- Example tfvars file is complete and accurate
+- Terraform deploys successfully
+- Deployed resources match Chapter 4 documentation
+- README is accurate and tested
+- Destruction removes all resources
+
+## Supporting Documentation Review
+
+### Review Task 8A: Main README Validation
+**Objective**: Verify main project README provides clear navigation and overview
+
+**Requirements**:
+- Validate table of contents is complete
+- Check all internal links work
+- Verify quick start guide is accurate
+- Confirm prerequisites are clearly stated
+- Validate architecture overview
+
+**Validation Steps**:
+1. Test every link in table of contents
+2. Verify quick start guides lead to correct sections
+3. Check prerequisites are complete and accurate
+4. Validate architecture overview aligns with Chapter 2
+5. Confirm contribution guidelines if present
+6. Check project description is clear and compelling
+
+**Acceptance Criteria**:
+- All TOC links work correctly
+- Quick start provides useful entry points
+- Prerequisites are complete
+- Overview accurately describes project
+
+### Review Task 8B: Templates README Comparison Table
+**Objective**: Validate template comparison guide is accurate and helpful
+
+**Requirements**:
+- Verify comparison table has accurate information
+- Check decision matrix helps users choose
+- Validate links to individual templates work
+- Confirm security considerations are documented
+- Check best practices are included
+
+**Validation Steps**:
+1. Review comparison table for accuracy
+2. Test decision matrix logic
+3. Verify all template directory links
+4. Check security considerations are comprehensive
+5. Validate best practices against cloud provider guidance
+
+**Acceptance Criteria**:
+- Comparison table accurately reflects templates
+- Decision guidance helps users choose appropriately
+- All links functional
+- Security and best practices documented
+
+### Review Task 8C: Images Documentation Review
+**Objective**: Validate image inventory and documentation is complete
+
+**Requirements**:
+- Verify all 10 images are documented
+- Check image descriptions are accurate
+- Validate naming convention explanation
+- Confirm image dimensions and context
+- Check all images are actually used in documentation
+
+**Validation Steps**:
+1. Count images in docs/images directory
+2. Cross-reference with images README inventory
+3. Verify each image is referenced in main documentation
+4. Check image descriptions match actual content
+5. Validate naming convention is explained
+6. Confirm file sizes are reasonable
+
+**Acceptance Criteria**:
+- All images inventoried in README
+- Every image is used in documentation
+- Descriptions accurately reflect image content
+- Naming convention clearly documented
+
+## Best Practices Validation
+
+### Review Task 9A: Security Configuration Review
+**Objective**: Validate all security configurations follow best practices
+
+**Requirements**:
+- Verify load balancers are internal (not internet-facing)
+- Check network security groups/NACLs follow least privilege
+- Confirm VPC Endpoint Service acceptance is manual
+- Validate Private Link visibility restrictions
+- Check no credentials in templates
+
+**Validation Steps**:
+1. Review all load balancer configurations for internal flag
+2. Audit NSG/NACL rules for unnecessary openness
+3. Verify endpoint service requires manual acceptance
+4. Check Private Link Service visibility settings
+5. Scan templates for hardcoded credentials
+6. Verify .gitignore prevents secret commits
+
+**Acceptance Criteria**:
+- All load balancers are internal
+- Network rules follow least privilege principle
+- Endpoint services require approval
+- No credentials in version control
+- Security best practices documented
+
+### Review Task 9B: Network Architecture Best Practices
+**Objective**: Validate network architecture follows cloud provider guidance
+
+**Requirements**:
+- Verify subnet selection guidance
+- Check availability zone distribution
+- Validate routing configurations
+- Confirm DNS architecture is sound
+- Check network segmentation
+
+**Validation Steps**:
+1. Review subnet selection against cloud best practices
+2. Verify multi-AZ deployment recommendations
+3. Check routing logic for efficiency
+4. Validate DNS resolution architecture
+5. Review network segmentation approach
+
+**Acceptance Criteria**:
+- Subnet guidance follows best practices
+- Multi-AZ deployment recommended where appropriate
+- Routing is efficient and secure
+- DNS architecture is sound
+- Network properly segmented
+
+### Review Task 9C: Cost Optimization Review
+**Objective**: Identify cost optimization opportunities and document them
+
+**Requirements**:
+- Review resource sizing recommendations
+- Check for unused resources in templates
+- Validate load balancer type selection
+- Confirm appropriate service tiers
+- Document cost considerations
+
+**Validation Steps**:
+1. Review resource configurations for cost efficiency
+2. Check load balancer types are cost-appropriate
+3. Verify no overprovisioning in templates
+4. Validate service tier selections
+5. Document cost implications of architecture
+
+**Acceptance Criteria**:
+- Resources appropriately sized
+- Cost-effective service selections
+- Cost considerations documented
+- No obvious overprovisioning
+
+### Review Task 9D: Operational Excellence Review
+**Objective**: Validate operational considerations are documented
+
+**Requirements**:
+- Check monitoring recommendations
+- Verify logging guidance
+- Validate troubleshooting procedures
+- Confirm maintenance considerations
+- Check disaster recovery guidance
+
+**Validation Steps**:
+1. Review monitoring recommendations for completeness
+2. Check logging configuration guidance
+3. Validate troubleshooting procedures are actionable
+4. Verify maintenance considerations are documented
+5. Check for disaster recovery guidance
+
+**Acceptance Criteria**:
+- Monitoring approach documented
+- Logging properly configured
+- Troubleshooting procedures are complete
+- Maintenance considerations addressed
+- DR considerations documented if applicable
+
+# Development Roadmap
+
+## Phase 1: Core Chapter Reviews (Tasks 1A-6A)
+Review main documentation chapters sequentially to establish baseline accuracy and identify structural issues before template validation.
+
+## Phase 2: Template Functional Validation (Tasks 7A-7D)
+Deploy and test all templates to ensure functionality matches documentation. This phase requires sandbox AWS and Azure environments.
+
+## Phase 3: Supporting Documentation (Tasks 8A-8C)
+Review README files and supporting documentation to ensure navigation and overview content is accurate.
+
+## Phase 4: Best Practices Audit (Tasks 9A-9D)
+Comprehensive review of security, architecture, cost, and operational practices to ensure quality and safety.
+
+## Phase 5: Remediation and Retesting
+Address all findings from previous phases and retest to confirm corrections.
+
+# Logical Dependency Chain
+
+## Review must proceed in this order:
+
+1. **Chapter Reviews First**: Validate content accuracy before testing implementation
+2. **Templates After Chapters**: Template review depends on chapter accuracy
+3. **Supporting Docs Follow**: Navigation documentation reviewed after content is stable
+4. **Best Practices Last**: Holistic review after all components validated
+
+## Parallel Work Opportunities
+
+These reviews can proceed in parallel:
+- AWS chapters and templates (3A, 3B, 3C, 7A, 7B)
+- Azure chapters and templates (4A, 4B, 4C, 7C, 7D)
+- Supporting documentation reviews (8A, 8B, 8C)
+
+## Blocking Dependencies
+
+- Template validation (7A-7D) requires sandbox environments provisioned
+- Best practices review (9A-9D) requires all documentation finalized
+- Supporting docs review (8A-8C) requires main chapters stable
+
+# Risks and Mitigations
+
+## Technical Challenges
+
+**Risk**: Cloud provider UI changes make screenshot validation impossible
+**Mitigation**: Focus on functional validation over UI matching, note review date clearly
+
+**Risk**: Template deployment testing is expensive
+**Mitigation**: Use sandbox accounts with spending limits, destroy resources immediately after validation
+
+**Risk**: Snowflake environment access required for SPCS testing
+**Mitigation**: Focus on SQL syntax validation, defer end-to-end testing to integration phase
+
+**Risk**: On-premise connectivity required for complete validation
+**Mitigation**: Validate logic and configuration, note that final connectivity depends on customer environment
+
+## Resource Constraints
+
+**Time**: Full review and testing requires significant time investment
+**Solution**: Prioritize critical paths (Chapter 3/4, Template 7A/7B for production deployment)
+
+**Environment Access**: Requires both AWS and Azure sandbox accounts
+**Solution**: Create dedicated test accounts with appropriate cost controls
+
+**Expertise**: Requires knowledge across AWS, Azure, Snowflake, and Terraform
+**Solution**: Use official documentation heavily, focus on verification over interpretation
+
+# Appendix
+
+## Testing Environment Requirements
+
+### AWS Sandbox Account Needs
+- VPC with 2 subnets in different AZs
+- Ability to create NLBs and VPC Endpoint Services
+- Route 53 Resolver permissions
+- CloudFormation and Terraform execution permissions
+- Estimated cost per test: $5-10 (if cleaned up immediately)
+
+### Azure Sandbox Subscription Needs
+- Virtual Network with subnet
+- Ability to create Standard Load Balancers
+- Private Link Service permissions
+- ARM template and Terraform deployment permissions
+- Estimated cost per test: $5-10 (if cleaned up immediately)
+
+## Review Tools
+
+- **Terraform**: v1.13.5 for validation and deployment testing
+- **AWS CLI**: Latest version for command validation
+- **Azure CLI**: Latest version for command validation
+- **Link Checker**: For URL validation in references
+- **yamllint**: For CloudFormation template validation
+- **jq**: For ARM template JSON validation
+
+## Quality Metrics
+
+Target outcomes after review completion:
+- Zero broken reference links
+- 100% of commands tested and working
+- All templates deployable successfully
+- Zero critical security misconfigurations
+- All best practices documented
+- Documentation accuracy > 99%
+
+## Success Indicators
+
+Documentation is production-ready when:
+- Independent tester can deploy using docs alone
+- All templates pass deployment testing
+- Zero critical findings from review
+- Best practices validated against official guidance
+- Maintenance procedures documented
+</PRD>
+

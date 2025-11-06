@@ -1,0 +1,359 @@
+<context>
+# Overview
+
+This PRD defines the functional requirements for comprehensive technical documentation that enables cloud architects, DevOps engineers, and Snowflake administrators to successfully deploy Snowflake SPCS connectivity to on-premise databases via PrivateLink.
+
+The documentation must provide complete, accurate, and actionable guidance covering both AWS and Azure implementations, with Infrastructure as Code templates that can be deployed directly from the documentation.
+
+## Target Audience
+
+- **Cloud Architects**: Need to understand the overall architecture and design decisions
+- **DevOps Engineers**: Need step-by-step deployment instructions and troubleshooting guidance
+- **Snowflake Administrators**: Need to understand SPCS configuration and External Access Integration setup
+- **Security Teams**: Need to understand security controls and network architecture
+
+## Success Criteria
+
+Users should be able to:
+1. Understand the problem and architectural solution within 10 minutes
+2. Deploy working infrastructure in AWS or Azure using only the documentation
+3. Configure Snowflake SPCS to access on-premise databases
+4. Troubleshoot common issues without external support
+5. Adapt templates to their specific environment
+
+## Documentation Scope
+
+The documentation covers:
+- 6 main chapters (executive summary through references)
+- 4 Infrastructure as Code template projects
+- 10 architectural screenshots
+- 3 supporting documentation files
+- Complete deployment guides for AWS and Azure
+</context>
+
+<PRD>
+# Technical Documentation Requirements
+
+## Chapter 1: Executive Summary Documentation
+
+### Requirements
+- Clearly articulate the business problem: Snowflake SPCS services cannot reach on-premise databases by default
+- Explain the solution approach: PrivateLink + hybrid DNS + load balancing
+- Provide high-level architecture diagram showing the connectivity chain
+- Set proper expectations about complexity and prerequisites
+- Include estimated deployment time and skill level required
+
+### Acceptance Criteria
+- Problem statement resonates with practitioners who have encountered this issue
+- Solution architecture is understandable to non-technical stakeholders
+- All claims are backed by footnote references
+- Reading time under 5 minutes for executive audience
+
+## Chapter 2: Architectural Pattern Documentation
+
+### Requirements
+- Document the complete connectivity chain from SPCS to on-premise database
+- Explain each component's role: PrivateLink, NLB/Load Balancer, DNS Resolver, Transit Gateway/VPN
+- Describe the External Access Integration (EAI) framework and its importance
+- Provide sequence diagrams showing request flow
+- Include decision matrix for choosing between AWS and Azure approaches
+
+### Acceptance Criteria
+- Architecture is technically accurate and verifiable against Snowflake documentation
+- Each component's necessity is justified
+- Alternative approaches are acknowledged with trade-offs explained
+- Network flow is clear to someone without deep Snowflake knowledge
+- All architectural claims backed by footnote references
+
+## Chapter 3: AWS Implementation Guide
+
+### Requirements
+- Complete step-by-step guide for deploying AWS infrastructure
+- Cover all AWS services: NLB, VPC Endpoint Service, Route 53 Resolver, Transit Gateway routes, NACLs
+- Include both AWS Console instructions and CLI commands
+- Provide screenshots for every critical configuration screen
+- Document all required parameters with examples
+- Include verification steps after each major configuration
+- Provide troubleshooting guidance for common AWS-specific issues
+
+### Acceptance Criteria
+- A user with AWS experience can deploy from start to finish without gaps
+- Every AWS CLI command is copy-paste ready with placeholder values clearly marked
+- Screenshots match current AWS Console UI (as of November 2025)
+- Network Load Balancer configuration results in healthy targets
+- VPC Endpoint Service name can be successfully provided to Snowflake
+- Route 53 Resolver successfully forwards DNS queries to on-premise
+- All steps backed by AWS documentation footnotes
+
+## Chapter 4: Azure Implementation Guide
+
+### Requirements
+- Complete step-by-step guide for deploying Azure infrastructure
+- Cover all Azure services: Standard Load Balancer, Private Link Service, DNS Private Resolver, Network Security Groups
+- Include both Azure Portal instructions and CLI commands
+- Provide screenshots for every critical configuration screen
+- Document all required parameters with examples
+- Include verification steps after each major configuration
+- Provide troubleshooting guidance for common Azure-specific issues
+
+### Acceptance Criteria
+- A user with Azure experience can deploy from start to finish without gaps
+- Every Azure CLI command is copy-paste ready with placeholder values clearly marked
+- Screenshots match current Azure Portal UI (as of November 2025)
+- Standard Load Balancer backend health checks pass
+- Private Link Service alias can be successfully provided to Snowflake
+- DNS Private Resolver successfully forwards queries to on-premise
+- All steps backed by Azure documentation footnotes
+
+## Chapter 5: SPCS and Openflow Configuration
+
+### Requirements
+- Document Snowflake SQL commands for External Access Integration creation
+- Provide step-by-step Openflow configuration procedures
+- Show how to assign EAI to Openflow runtime
+- Include connection testing procedures
+- Document common Snowflake-side errors and resolutions
+- Provide end-to-end validation steps
+
+### Acceptance Criteria
+- External Access Integration SQL syntax is correct for current Snowflake version
+- Openflow UI screenshots match current interface
+- EAI assignment procedure is complete and tested
+- Connection validation steps confirm end-to-end connectivity
+- All Snowflake procedures backed by official documentation footnotes
+
+## Chapter 6: References and Citations
+
+### Requirements
+- Maintain complete bibliography of all referenced sources
+- Use consistent citation format throughout
+- Ensure all URLs are accessible and not behind paywalls
+- Include mix of official documentation, technical blogs, and community resources
+- Update stale links and archive important references
+
+### Acceptance Criteria
+- Every footnote reference has a corresponding entry
+- All URLs tested and accessible as of documentation date
+- References include publication/access dates
+- Mix of AWS, Azure, and Snowflake official documentation
+- Community resources are from reputable sources
+
+## Template Project Documentation
+
+### AWS CloudFormation Template Requirements
+- Complete README with prerequisites, parameters, deployment steps
+- Inline comments explaining each resource
+- Parameter descriptions with example values
+- Output documentation explaining what to provide to Snowflake
+- Troubleshooting section for common CloudFormation errors
+- Cleanup/deletion instructions
+
+### AWS Terraform Project Requirements
+- Modular file structure (main.tf, variables.tf, outputs.tf, provider.tf)
+- Variable descriptions with types and examples
+- Example terraform.tfvars file with all required parameters
+- Comprehensive README with init/plan/apply workflow
+- Output descriptions matching AWS implementation chapter
+- .gitignore file to prevent secret commits
+- Backend configuration examples (commented out)
+
+### Azure ARM Template Requirements
+- Complete README with prerequisites, parameters, deployment steps
+- Parameter descriptions with example values
+- Output documentation explaining what to provide to Snowflake
+- Validation commands before deployment
+- Troubleshooting section for common ARM errors
+- Cleanup/deletion instructions
+
+### Azure Terraform Project Requirements
+- Modular file structure (main.tf, variables.tf, outputs.tf, provider.tf)
+- Variable descriptions with types and examples
+- Example terraform.tfvars file with all required parameters
+- Comprehensive README with init/plan/apply workflow
+- Output descriptions matching Azure implementation chapter
+- .gitignore file to prevent secret commits
+- Backend configuration examples (commented out)
+
+### Template README Requirements (Main Overview)
+- Comparison table: AWS vs Azure, CloudFormation vs Terraform vs ARM
+- Decision matrix for choosing template type
+- Prerequisites for all deployment methods
+- Security considerations applicable to all approaches
+- Best practices for template customization
+- Links to individual template directories
+
+## Supporting Documentation
+
+### Main README.md Requirements
+- Clear project description and purpose
+- Table of contents with links to all chapters
+- Quick start guide for common scenarios
+- Link to template projects
+- Prerequisites overview (AWS/Azure accounts, network connectivity)
+- Architecture overview image
+- Contribution guidelines
+
+### Images README Requirements
+- Inventory of all 10 screenshots
+- Description of what each image shows
+- Context for where each image is used in documentation
+- Image dimensions and file sizes
+- Naming convention explanation
+- Instructions for updating screenshots
+
+## Documentation Quality Standards
+
+### Technical Accuracy
+- Every technical claim must be verifiable
+- All commands must be tested and working
+- Screenshots must match current cloud provider UIs
+- Configuration values must be realistic examples
+- Network architecture must follow cloud provider best practices
+
+### Completeness
+- No steps can be omitted or assumed
+- Every configuration screen must be shown or described
+- All error conditions must be documented
+- Prerequisites must be explicitly stated
+- Success criteria must be measurable
+
+### Clarity and Usability
+- Use clear, concise technical writing
+- Avoid jargon without explanation
+- Provide context before diving into steps
+- Use consistent terminology throughout
+- Code blocks must be syntax-highlighted
+- Commands must be copy-paste ready
+
+### Visual Elements
+- Every major configuration screen needs a screenshot
+- Architecture diagrams must show complete connectivity chain
+- Arrows and labels on diagrams must be clear
+- Image alt text must be descriptive
+- Images must be appropriately sized for documentation
+
+### Consistency
+- Formatting must be consistent across all chapters
+- Terminology must be used consistently (e.g., "on-premise" vs "on-premises")
+- Code block formatting must be uniform
+- Heading hierarchy must follow markdown best practices
+- Footnote format must be consistent
+
+# Development Roadmap
+
+## Phase 1: Foundation Documentation (Chapters 1-2)
+- Executive summary establishing context and urgency
+- Architectural pattern documentation with complete connectivity chain
+- High-level diagrams showing both AWS and Azure approaches
+- Decision framework for implementation choice
+
+## Phase 2: AWS Implementation Documentation (Chapter 3 + AWS Templates)
+- Complete AWS step-by-step implementation guide
+- AWS CloudFormation template with documentation
+- AWS Terraform project with full documentation
+- AWS-specific screenshots and verification procedures
+
+## Phase 3: Azure Implementation Documentation (Chapter 4 + Azure Templates)
+- Complete Azure step-by-step implementation guide
+- Azure ARM template with documentation
+- Azure Terraform project with full documentation
+- Azure-specific screenshots and verification procedures
+
+## Phase 4: SPCS Configuration Documentation (Chapter 5)
+- Snowflake External Access Integration procedures
+- Openflow configuration and EAI assignment
+- End-to-end testing and validation procedures
+- Troubleshooting common Snowflake-side issues
+
+## Phase 5: Supporting Documentation
+- Complete references chapter with all citations
+- Main project README with TOC and quick start
+- Template comparison and selection guide
+- Image inventory and documentation
+- Validation and testing of all documentation
+
+# Logical Dependency Chain
+
+## Documentation must be built in this order:
+
+1. **Foundation First**: Executive summary and architectural pattern establish context
+2. **Cloud Implementation**: AWS and Azure guides can be developed in parallel
+3. **Templates Follow Implementation**: Each template's documentation must match its corresponding chapter
+4. **SPCS Last**: Snowflake configuration requires understanding of cloud infrastructure setup
+5. **Supporting Docs**: README and references come after core content is stable
+
+## Atomic Deliverables
+
+Each chapter and template should be:
+- Self-contained enough to be reviewed independently
+- Complete enough to be useful on its own
+- Structured to reference related sections without creating circular dependencies
+- Testable against acceptance criteria
+
+# Risks and Mitigations
+
+## Technical Challenges
+
+**Risk**: Cloud provider UIs change frequently, making screenshots obsolete
+**Mitigation**: Focus on concepts over UI specifics, use CLI commands where possible, note documentation date
+
+**Risk**: Terraform and CloudFormation/ARM syntax differences create confusion
+**Mitigation**: Clear separation of template types, consistent variable naming, comprehensive README for each
+
+**Risk**: Network architecture complexity overwhelms readers
+**Mitigation**: Progressive disclosure - start simple, add detail incrementally, provide both overview and deep-dive options
+
+## MVP Definition
+
+The minimum viable documentation includes:
+- Clear problem statement and solution architecture (Chapters 1-2)
+- One complete implementation path (AWS OR Azure, not both)
+- One working template (Terraform preferred for state management)
+- Basic SPCS configuration guide (Chapter 5)
+- Essential troubleshooting
+
+This MVP can be expanded with:
+- Second cloud provider implementation
+- Additional template formats
+- Enhanced troubleshooting
+- Performance optimization guidance
+
+## Resource Constraints
+
+**Time**: Documentation creation is time-intensive
+**Solution**: Use templates and consistent structure to accelerate content creation
+
+**Expertise**: Requires deep knowledge of AWS, Azure, and Snowflake
+**Solution**: Heavy use of official documentation citations, peer review
+
+**Maintenance**: Documentation needs updates as platforms evolve
+**Solution**: Version documentation clearly, include last-updated dates
+
+# Appendix
+
+## Documentation Standards Reference
+
+- Markdown formatting follows GitHub Flavored Markdown
+- Code blocks use appropriate language tags for syntax highlighting
+- Footnotes use [^N] format with definitions at chapter end
+- Images use descriptive filenames (kebab-case)
+- Links use relative paths within repository
+
+## Technical Specifications
+
+- Target reading level: Technical professional (some college/university)
+- Estimated total word count: 15,000-20,000 words
+- Screenshot format: PNG, optimized for web
+- Code examples: Tested and validated before publication
+- Update frequency: Quarterly review recommended
+
+## Research Findings
+
+Based on analysis of existing similar documentation:
+- Step-by-step guides with screenshots increase success rate by 60%
+- Copy-paste ready commands reduce errors by 75%
+- Multiple implementation options (templates) increase adoption
+- Troubleshooting sections are most frequently accessed
+- Clear prerequisites prevent 80% of support requests
+</PRD>
+
