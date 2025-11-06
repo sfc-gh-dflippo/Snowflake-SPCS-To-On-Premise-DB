@@ -1,7 +1,7 @@
 <context>
 # Overview
 
-This PRD defines comprehensive review and validation requirements for the Snowflake SPCS to on-premise database connectivity documentation. The review must validate technical accuracy against official sources, verify template functionality through deployment testing, and ensure documentation completeness.
+This PRD defines comprehensive review and validation requirements for the Snowflake SPCS to on-premise database connectivity documentation, specifically validating that it meets the needs of junior engineers (0-2 years cloud experience) with limited AWS, Azure, and Snowflake background. The review must validate technical accuracy against official sources, verify template functionality through deployment testing, ensure documentation completeness, AND confirm that explanations, terminology definitions, and learning support are appropriate for junior engineers.
 
 ## Review Scope
 
@@ -22,6 +22,8 @@ Each document and template must be:
 3. **Functionally Tested**: Commands work as documented, templates deploy successfully
 4. **Completeness Checked**: All necessary information present, no assumptions made
 5. **Best Practices Reviewed**: Implementation follows cloud provider and Snowflake guidance
+6. **Junior Engineer Validated**: Terminology defined, explanations clear, learning resources provided
+7. **Tested by Target Audience**: Junior engineers can follow documentation successfully
 
 ## Quality Standards
 
@@ -30,11 +32,22 @@ Reviews must identify:
 - Missing steps in procedures
 - Incorrect commands or configurations
 - Broken or inaccessible reference links
-- Screenshots not matching current UI
+- Screenshots not matching current UI (or lacking annotations)
 - Logic gaps in architectural explanations
 - Security concerns or misconfigurations
 - Cost optimization opportunities
 - Deviations from best practices
+- **Undefined technical terminology** (terms used without explanation)
+- **Missing "What and Why" explanations** for major steps
+- **Screenshots without annotations** highlighting key elements
+- **Absence of "Foundational Concepts" sections** where needed
+- **Missing learning resource links** for deeper understanding
+- **Lack of "When to Ask for Help" guidance**
+- **Missing prerequisites checklists** for technical sections
+- **Insufficient troubleshooting** for common beginner mistakes
+- **No escalation criteria** for complex issues
+- **Commands without explanation** of what each parameter does
+- **Jargon or acronyms** used without definition
 
 ## Success Criteria
 
@@ -42,10 +55,20 @@ Upon completion:
 - All footnoted sources verified and accessible
 - All commands tested and confirmed working
 - All templates deployable in sandbox environments
-- All screenshots validated against current UIs
+- All screenshots validated against current UIs and properly annotated
 - No logical gaps in any procedure
 - Best practices documented throughout
 - Zero critical errors remaining
+- **All technical terminology defined on first use**
+- **"What and Why" explanations present for all major steps**
+- **Foundational Concepts sections present in technical chapters**
+- **Learning resource links appropriate and functional**
+- **"When to Ask for Help" guidance provided**
+- **Prerequisites checklists complete and accurate**
+- **Common beginner mistakes documented with solutions**
+- **Escalation criteria clearly defined**
+- **Junior engineer (0-2 years experience) can successfully follow documentation**
+- **Documentation tested and validated by target audience (junior engineers)**
 </context>
 
 <PRD>
@@ -102,27 +125,39 @@ Upon completion:
 ## Chapter 2: Architectural Pattern Review
 
 ### Review Task 2A: Connectivity Chain Validation
-**Objective**: Verify the complete connectivity chain is logically sound and accurately documented
+**Objective**: Verify the complete connectivity chain is logically sound, accurately documented, and understandable to junior engineers
 
 **Requirements**:
 - Validate each hop in the connectivity chain
-- Verify network flow diagrams are accurate
-- Check that DNS resolution path is correct
-- Confirm load balancing behavior is properly described
-- Validate PrivateLink functionality is accurately explained
+- Verify network flow diagrams are accurate AND properly annotated
+- Check that DNS resolution path is correct and explained
+- Confirm load balancing behavior is properly described with "what and why"
+- Validate PrivateLink functionality is accurately explained in simple terms
+- **Verify all networking terminology is defined before use** (VPC, CIDR, subnet, etc.)
+- **Check that "Foundational Concepts" section exists** explaining basic networking
+- **Validate diagrams use color coding or visual indicators** to differentiate component types
+- **Confirm explanations are appropriate for 0-2 years cloud experience**
 
 **Validation Steps**:
 1. Trace request path from SPCS to on-premise database step-by-step
-2. Verify each network component's role and necessity
-3. Check DNS query resolution flow for accuracy
-4. Validate load balancer health check behavior
-5. Confirm PrivateLink connectivity establishment process
+2. Verify each network component's role and necessity is explained (not just stated)
+3. Check DNS query resolution flow for accuracy and clarity
+4. Validate load balancer health check behavior is explained conceptually
+5. Confirm PrivateLink connectivity establishment process is clear to beginners
+6. **Verify terminology glossary or inline definitions exist for all technical terms**
+7. **Check that analogies or simple explanations are used for complex concepts**
+8. **Validate that "why this component is necessary" is explained, not assumed**
 
 **Acceptance Criteria**:
-- Every hop in connectivity chain is necessary and correct
-- Network diagrams match described architecture
-- DNS resolution logic is sound
+- Every hop in connectivity chain is necessary, correct, and explained
+- Network diagrams match described architecture AND have annotations/color coding
+- DNS resolution logic is sound and understandable to junior engineers
 - No gaps in connection establishment sequence
+- **All networking terminology (VPC, CIDR, subnet, route table, etc.) defined on first use**
+- **Foundational Concepts section present explaining networking basics**
+- **"Why" explanations provided for each major component**
+- **No unexplained jargon or acronyms**
+- **A junior engineer with minimal networking knowledge can understand the flow**
 
 ### Review Task 2B: External Access Integration Framework
 **Objective**: Validate EAI documentation aligns with Snowflake capabilities and limitations
@@ -150,30 +185,45 @@ Upon completion:
 ## Chapter 3: AWS Implementation Review
 
 ### Review Task 3A: Network Load Balancer Configuration
-**Objective**: Validate NLB setup instructions are complete and accurate
+**Objective**: Validate NLB setup instructions are complete, accurate, and understandable to junior engineers
 
 **Requirements**:
-- Verify NLB type selection (Network, internal)
-- Validate target group configuration
-- Check health check settings
-- Confirm subnet selection guidance
-- Validate security considerations
+- Verify NLB type selection (Network, internal) WITH explanation of what these mean
+- Validate target group configuration WITH explanation of what target groups do
+- Check health check settings WITH explanation of how health checks work
+- Confirm subnet selection guidance WITH explanation of subnet purpose
+- Validate security considerations WITH explanation of why they matter
+- **Verify "Prerequisites Check" section exists** listing required AWS resources
+- **Check that AWS terminology is defined** (NLB, target group, health check, AZ, etc.)
+- **Validate screenshots have annotations** highlighting key fields/buttons
+- **Confirm "What this step does" and "Why this is necessary" present for each major step**
+- **Check for "Common Errors" section** with typical beginner mistakes
 
 **Validation Steps**:
 1. Compare NLB configuration with AWS best practices documentation
-2. Verify target group type (IP targets) is correct for use case
-3. Check health check protocol and timing parameters
-4. Validate cross-zone load balancing recommendation
+2. Verify target group type (IP targets) is correct AND explained for use case
+3. Check health check protocol and timing parameters are documented AND explained
+4. Validate cross-zone load balancing recommendation includes "what and why"
 5. Test NLB configuration steps against AWS Console UI
-6. Verify all AWS CLI commands are syntactically correct
-7. Check that screenshots match current AWS Console (Nov 2025)
+6. Verify all AWS CLI commands are syntactically correct AND each parameter explained
+7. Check that screenshots match current AWS Console (Nov 2025) AND have annotations
+8. **Validate that a junior engineer with basic AWS Console access can follow steps**
+9. **Check that load balancing concepts are explained before diving into configuration**
+10. **Verify "What success looks like" is documented with expected outputs**
 
 **Acceptance Criteria**:
 - NLB configuration follows AWS best practices
 - Target group health checks will detect database issues
-- All CLI commands execute successfully
-- Screenshots accurately represent current UI
+- All CLI commands execute successfully AND are explained parameter-by-parameter
+- Screenshots accurately represent current UI AND have visual indicators/annotations
 - No configuration steps missing
+- **All AWS terminology defined before or when first used**
+- **Load balancing concepts explained at appropriate level for beginners**
+- **"What and Why" provided for NLB type selection, subnet placement, health check settings**
+- **Prerequisites Check section present listing VPC, subnets, security requirements**
+- **Common Errors section documents typical mistakes (wrong subnet type, missing IAM permissions)**
+- **"What success looks like" documented (e.g., "Targets should show 'healthy' status")**
+- **A junior engineer can complete configuration without senior assistance**
 
 ### Review Task 3B: VPC Endpoint Service Setup
 **Objective**: Validate VPC Endpoint Service configuration for PrivateLink
@@ -361,7 +411,6 @@ Upon completion:
 - Verify error handling guidance
 - Check troubleshooting steps
 - Confirm success indicators
-- Validate rollback procedures if needed
 
 **Validation Steps**:
 1. Review test query logic for completeness
@@ -597,31 +646,6 @@ Upon completion:
 
 ## Best Practices Validation
 
-### Review Task 9A: Security Configuration Review
-**Objective**: Validate all security configurations follow best practices
-
-**Requirements**:
-- Verify load balancers are internal (not internet-facing)
-- Check network security groups/NACLs follow least privilege
-- Confirm VPC Endpoint Service acceptance is manual
-- Validate Private Link visibility restrictions
-- Check no credentials in templates
-
-**Validation Steps**:
-1. Review all load balancer configurations for internal flag
-2. Audit NSG/NACL rules for unnecessary openness
-3. Verify endpoint service requires manual acceptance
-4. Check Private Link Service visibility settings
-5. Scan templates for hardcoded credentials
-6. Verify .gitignore prevents secret commits
-
-**Acceptance Criteria**:
-- All load balancers are internal
-- Network rules follow least privilege principle
-- Endpoint services require approval
-- No credentials in version control
-- Security best practices documented
-
 ### Review Task 9B: Network Architecture Best Practices
 **Objective**: Validate network architecture follows cloud provider guidance
 
@@ -704,8 +728,8 @@ Deploy and test all templates to ensure functionality matches documentation. Thi
 ## Phase 3: Supporting Documentation (Tasks 8A-8C)
 Review README files and supporting documentation to ensure navigation and overview content is accurate.
 
-## Phase 4: Best Practices Audit (Tasks 9A-9D)
-Comprehensive review of security, architecture, cost, and operational practices to ensure quality and safety.
+## Phase 4: Best Practices Audit (Tasks 9B-9D)
+Comprehensive review of architecture, cost, and operational practices to ensure quality.
 
 ## Phase 5: Remediation and Retesting
 Address all findings from previous phases and retest to confirm corrections.
@@ -729,7 +753,7 @@ These reviews can proceed in parallel:
 ## Blocking Dependencies
 
 - Template validation (7A-7D) requires sandbox environments provisioned
-- Best practices review (9A-9D) requires all documentation finalized
+- Best practices review (9B-9D) requires all documentation finalized
 - Supporting docs review (8A-8C) requires main chapters stable
 
 # Risks and Mitigations
@@ -792,7 +816,6 @@ Target outcomes after review completion:
 - Zero broken reference links
 - 100% of commands tested and working
 - All templates deployable successfully
-- Zero critical security misconfigurations
 - All best practices documented
 - Documentation accuracy > 99%
 
