@@ -27,6 +27,22 @@ resource "azurerm_subnet" "snowflake_privatelink_subnet" {
   private_link_service_network_policies_enabled = false
 }
 
+# DNS Resolver Outbound Endpoint Subnet
+resource "azurerm_subnet" "dns_resolver_outbound" {
+  name                 = "snet-dns-outbound"
+  resource_group_name  = azurerm_resource_group.snowflake_privatelink_rg.name
+  virtual_network_name = azurerm_virtual_network.snowflake_privatelink_vnet.name
+  address_prefixes     = [var.dns_resolver_outbound_subnet_prefix]
+
+  delegation {
+    name = "Microsoft.Network.dnsResolvers"
+    service_delegation {
+      name    = "Microsoft.Network/dnsResolvers"
+      actions = ["Microsoft.Network/virtualNetworks/subnets/join/action"]
+    }
+  }
+}
+
 # Standard Load Balancer
 resource "azurerm_lb" "snowflake_privatelink_lb" {
   name                = var.load_balancer_name
@@ -103,6 +119,58 @@ resource "azurerm_private_link_service" "snowflake_privatelink_service" {
   auto_approval_subscription_ids = [var.snowflake_subscription_id]
 }
 
+# DNS Private Resolver
+resource "azurerm_private_dns_resolver" "hub_resolver" {
+  name                = "dns-resolver-hub"
+  resource_group_name = azurerm_resource_group.snowflake_privatelink_rg.name
+  location            = azurerm_resource_group.snowflake_privatelink_rg.location
+  virtual_network_id  = azurerm_virtual_network.snowflake_privatelink_vnet.id
+  tags                = var.tags
+}
+
+# DNS Resolver Outbound Endpoint
+resource "azurerm_private_dns_resolver_outbound_endpoint" "onprem" {
+  name                    = "onprem-dns-outbound"
+  private_dns_resolver_id = azurerm_private_dns_resolver.hub_resolver.id
+  location                = azurerm_resource_group.snowflake_privatelink_rg.location
+  subnet_id               = azurerm_subnet.dns_resolver_outbound.id
+  tags                    = var.tags
+}
+
+# DNS Forwarding Ruleset
+resource "azurerm_private_dns_resolver_dns_forwarding_ruleset" "onprem" {
+  name                                       = "onprem-dns-ruleset"
+  resource_group_name                        = azurerm_resource_group.snowflake_privatelink_rg.name
+  location                                   = azurerm_resource_group.snowflake_privatelink_rg.location
+  private_dns_resolver_outbound_endpoint_ids = [azurerm_private_dns_resolver_outbound_endpoint.onprem.id]
+  tags                                       = var.tags
+}
+
+# DNS Forwarding Rule for On-Premise Domain
+resource "azurerm_private_dns_resolver_forwarding_rule" "onprem_domain" {
+  name                      = "onprem-forwarding-rule"
+  dns_forwarding_ruleset_id = azurerm_private_dns_resolver_dns_forwarding_ruleset.onprem.id
+  domain_name               = "${var.on_premise_domain_name}."
+  enabled                   = true
+
+  target_dns_servers {
+    ip_address = var.on_premise_dns_server_ip1
+    port       = 53
+  }
+
+  target_dns_servers {
+    ip_address = var.on_premise_dns_server_ip2
+    port       = 53
+  }
+}
+
+# VNet Link for DNS Forwarding Ruleset
+resource "azurerm_private_dns_resolver_virtual_network_link" "hub_link" {
+  name                      = "hub-vnet-link"
+  dns_forwarding_ruleset_id = azurerm_private_dns_resolver_dns_forwarding_ruleset.onprem.id
+  virtual_network_id        = azurerm_virtual_network.snowflake_privatelink_vnet.id
+}
+
 # Network Security Group
 resource "azurerm_network_security_group" "snowflake_nsg" {
   name                = "${var.subnet_name}-nsg"
@@ -110,21 +178,49 @@ resource "azurerm_network_security_group" "snowflake_nsg" {
   resource_group_name = azurerm_resource_group.snowflake_privatelink_rg.name
   tags                = var.tags
 
+  # Allow Azure Load Balancer health probes
   security_rule {
-    name                       = "AllowSnowflakeInbound"
+    name                       = "AllowAzureLoadBalancerProbe"
     priority                   = 100
     direction                  = "Inbound"
     access                     = "Allow"
     protocol                   = "Tcp"
-    source_address_prefix      = "*"
+    source_address_prefix      = "AzureLoadBalancer"
+    source_port_range          = "*"
+    destination_address_prefix = "*"
+    destination_port_range     = tostring(var.on_premise_database_port)
+  }
+
+  # Allow traffic from Private Link Service
+  security_rule {
+    name                       = "AllowPrivateLinkService"
+    priority                   = 110
+    direction                  = "Inbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_address_prefix      = "VirtualNetwork"
     source_port_range          = "*"
     destination_address_prefix = var.subnet_address_prefix
     destination_port_range     = tostring(var.on_premise_database_port)
   }
 
+  # Allow outbound to on-premise database
   security_rule {
-    name                       = "AllowOutbound"
+    name                       = "AllowToOnPremise"
     priority                   = 100
+    direction                  = "Outbound"
+    access                     = "Allow"
+    protocol                   = "Tcp"
+    source_address_prefix      = "VirtualNetwork"
+    source_port_range          = "*"
+    destination_address_prefix = var.on_premise_database_ip
+    destination_port_range     = tostring(var.on_premise_database_port)
+  }
+
+  # Allow all other outbound
+  security_rule {
+    name                       = "AllowOtherOutbound"
+    priority                   = 120
     direction                  = "Outbound"
     access                     = "Allow"
     protocol                   = "*"

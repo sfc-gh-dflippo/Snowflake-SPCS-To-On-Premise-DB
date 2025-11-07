@@ -31,8 +31,16 @@ aws cloudformation create-stack \
     ParameterKey=VpcId,ParameterValue=vpc-xxxxx \
     ParameterKey=SubnetId1,ParameterValue=subnet-xxxxx \
     ParameterKey=SubnetId2,ParameterValue=subnet-yyyyy \
-    ... (see Parameters section)
-  --capabilities CAPABILITY_IAM
+    ParameterKey=RouteTableId1,ParameterValue=rtb-xxxxx \
+    ParameterKey=RouteTableId2,ParameterValue=rtb-yyyyy \
+    ParameterKey=OnPremDatabaseIP,ParameterValue=10.50.100.25 \
+    ParameterKey=OnPremCidr,ParameterValue=10.50.0.0/16 \
+    ParameterKey=OnPremDNSServerIP1,ParameterValue=10.50.1.10 \
+    ParameterKey=OnPremDNSServerIP2,ParameterValue=10.50.1.11 \
+    ParameterKey=TransitGatewayId,ParameterValue=tgw-xxxxx \
+    ParameterKey=SnowflakeVpcCidr,ParameterValue=54.10.0.0/24
+# Note: DatabasePort and OnPremDomainName use defaults (1433 and corp.local)
+# Add them explicitly if your values differ from the defaults
 ```
 
 ### Using AWS Console
@@ -52,11 +60,11 @@ aws cloudformation create-stack \
 - **SubnetId2**: Second subnet ID
 - **RouteTableId1**: Route table ID for SubnetId1
 - **RouteTableId2**: Route table ID for SubnetId2
-- **OnPremDatabaseIp**: Private IP of on-premise database
+- **OnPremDatabaseIP**: Private IP of on-premise database
 - **OnPremCidr**: CIDR block of on-premise network
 - **OnPremDomainName**: Internal DNS domain (e.g., corp.local)
-- **OnPremDnsServer1**: IP of first on-premise DNS server
-- **OnPremDnsServer2**: IP of second on-premise DNS server
+- **OnPremDNSServerIP1**: IP of first on-premise DNS server
+- **OnPremDNSServerIP2**: IP of second on-premise DNS server
 - **TransitGatewayId**: Transit Gateway ID connecting to on-premise
 - **SnowflakeVpcCidr**: Snowflake VPC CIDR (obtain from Snowflake Support)
 
@@ -68,9 +76,20 @@ aws cloudformation create-stack \
 
 After stack creation, note these important outputs:
 
-- **VPCEndpointServiceName**: Provide this to Snowflake administrator
-- **NLBDnsName**: DNS name of the Network Load Balancer
-- **ResolverEndpointId**: Route 53 Resolver Endpoint ID
+- **VpcEndpointServiceName**: Provide this to Snowflake administrator
+- **VpcEndpointServiceId**: The VPC Endpoint Service ID
+- **NLBDNSName**: DNS name of the Network Load Balancer
+
+## Deployment Time
+
+**Expected Duration:** 5-10 minutes
+
+Component breakdown:
+- Network Load Balancer: ~2-3 minutes
+- VPC Endpoint Service: ~1 minute  
+- Route 53 Resolver Endpoints: ~2-3 minutes
+- Network ACL associations: <1 minute
+- Route table updates: <1 minute
 
 ## Monitoring
 

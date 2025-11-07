@@ -1,5 +1,9 @@
-# Copy this file to "terraform.tfvars" and fill in your values.
-# Use the instructions in 'variables.tf' to find each value.
+# Copy this file to "terraform.tfvars" and fill in your values:
+#   cp terraform.tfvars.example terraform.tfvars
+#
+# Use the descriptions in 'variables.tf' to find each value for your environment.
+# Required fields are marked with "vpc-...", "subnet-...", etc. placeholders.
+# Optional fields with defaults are commented out at the bottom.
 
 aws_region                = "us-east-1"
 vpc_id                    = "vpc-..."
@@ -14,8 +18,6 @@ on_prem_dns_server_ip_2   = "10.50.1.11"
 transit_gateway_id        = "tgw-..."
 snowflake_vpc_cidr        = "54.10.0.0/24" # <-- Get this from Snowflake!
 
-# You can leave these commented out to use the defaults for SQL Server
+# Optional: Leave these commented out to use the defaults for SQL Server
 # on_prem_domain_name     = "corp.local"
 # database_port           = 1433
-
-```

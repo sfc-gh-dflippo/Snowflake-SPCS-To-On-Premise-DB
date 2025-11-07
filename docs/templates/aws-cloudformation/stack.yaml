@@ -1,32 +1,8 @@
 AWSTemplateFormatVersion: '2010-09-09'
-Description: |
-  *** HOW TO USE THIS TEMPLATE (FOR SQL SERVER) ***
-
-  This template provisions all AWS resources (NLB, VPC Endpoint Service, DNS)
-  to connect Snowflake to an ON-PREMISE SQL SERVER database.
-
-  ---
-  STEP 1: GATHER YOUR INFORMATION
-  You MUST find 11 values from your AWS and On-Premise environment.
-  The 'Parameters' section below has "How to Find" instructions for each.
-
-  ---
-  STEP 2: DEPLOY THE STACK
-  1. Go to the AWS CloudFormation console and click "Create stack".
-  2. Select "Upload a template file" and upload this file directly.
-  3. AWS will create a web form. Fill in the 11 required values.
-  4. This template pre-fills the 'DatabasePort' to 1433 for SQL Server
-     and 'OnPremDomainName' to 'corp.local'. Change them if they are different.
-  5. Click "Next", "Next", and "Create stack".
-
-  ---
-  STEP 3: COMPLETE THE CONNECTION
-  1. After the stack shows "CREATE_COMPLETE", go to its 'Outputs' tab.
-  2. Copy the 'VpcEndpointServiceName' value.
-  3. Provide this value to your Snowflake Administrator.
-  4. Go to the AWS VPC Console -> Endpoint Services. Select your new service.
-  5. Click the 'Endpoint connections' tab and "Accept" the connection request
-     that appears from Snowflake.
+Description: >
+  Provisions AWS resources (NLB, VPC Endpoint Service, Route53 Resolver, NACLs) for Snowflake PrivateLink
+  connectivity to an on-premise SQL Server database via Transit Gateway. Default port: 1433.
+  After deployment, retrieve VpcEndpointServiceName from Outputs and provide to Snowflake Administrator.
 
 Parameters:
   VpcId:
@@ -266,7 +242,3 @@ Outputs:
   VpcEndpointServiceName:
     Description: "CRITICAL: The VPC Endpoint Service Name. Provide this value to your Snowflake Administrator."
     Value: !GetAtt SnowflakeVpcEndpointService.ServiceName
-
-
-
-```

@@ -5,9 +5,11 @@ This directory contains Terraform configuration for deploying Snowflake Private 
 ## Overview
 
 This Terraform configuration creates:
-- Virtual Network and subnet
+- Virtual Network and subnets
 - Internal Load Balancer
 - Private Link Service
+- Azure Private DNS Resolver with outbound endpoint
+- DNS forwarding ruleset for on-premise domain
 - Network Security Group
 - All necessary connectivity for Snowflake Private Link
 
@@ -19,7 +21,11 @@ This Terraform configuration creates:
   - Virtual Networks
   - Load Balancers
   - Private Link Services
+  - DNS Private Resolvers
   - Network Security Groups
+- On-premise DNS server IP addresses for forwarding
+- On-premise domain name to forward (e.g., corp.local)
+- Available /28 subnet for DNS resolver outbound endpoint
 
 ## Quick Start
 
@@ -31,8 +37,10 @@ This Terraform configuration creates:
 2. **Edit `terraform.tfvars` with your values:**
    - Update `on_premise_database_ip` with your database IP
    - Update `on_premise_database_port` with your database port
+   - Update `on_premise_domain_name` with your internal domain
+   - Update `on_premise_dns_server_ip1` and `on_premise_dns_server_ip2`
    - Update `snowflake_subscription_id` with Snowflake's Azure subscription ID
-   - Adjust network addresses if needed
+   - Adjust network addresses if needed (including DNS resolver subnet)
 
 3. **Initialize Terraform:**
    ```bash
@@ -71,6 +79,7 @@ After running `terraform apply`, note these critical outputs:
 - **`private_link_service_alias`**: Provide this to your Snowflake administrator
 - **`private_link_service_id`**: Provide this to your Snowflake administrator
 - **`load_balancer_ip`**: Private IP of the load balancer
+- **`dns_resolver_outbound_endpoint_ip`**: IP of DNS resolver for troubleshooting
 
 ## Configuration Details
 
@@ -96,6 +105,14 @@ The Private Link Service:
 - Allows Snowflake subscription to create private endpoint
 - Requires manual approval of connections
 - Provides secure, private connectivity
+
+### DNS Private Resolver
+
+The DNS resolver enables Snowflake to resolve on-premise DNS names:
+- Outbound endpoint in dedicated, delegated subnet
+- DNS forwarding ruleset for on-premise domain
+- VNet link to enable DNS resolution
+- Targets on-premise DNS servers for domain queries
 
 ## Security Considerations
 
@@ -138,6 +155,14 @@ Modify the `tags` variable in `terraform.tfvars` to add organization-specific ta
 2. Verify load balancer frontend is associated
 3. Confirm Snowflake subscription ID is correct
 4. Review Private Link service visibility settings
+
+### DNS Resolution Issues
+
+1. Verify DNS resolver is provisioned successfully
+2. Check forwarding ruleset is linked to VNet
+3. Confirm on-premise DNS servers are reachable
+4. Test DNS resolution from Azure VMs in the VNet
+5. Verify domain name ends with dot in forwarding rule
 
 ## Cleanup
 

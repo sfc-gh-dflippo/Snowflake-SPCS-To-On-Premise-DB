@@ -12,12 +12,20 @@ private_link_service_name = "snowflake-pls"
 location = "West US 2"
 
 # Network configuration
+# Note: Ensure subnet prefixes are within VNet address space
+# DNS resolver subnet must be /28 or larger and dedicated to DNS resolver
 vnet_address_space    = ["10.0.0.0/16"]
 subnet_address_prefix = "10.0.1.0/24"
+dns_resolver_outbound_subnet_prefix = "10.0.10.0/28"
 
 # On-premise database configuration
 on_premise_database_ip   = "192.168.1.10"  # Replace with your database IP
-on_premise_database_port = 3306            # Replace with your database port
+on_premise_database_port = 1433            # Default: SQL Server (use 3306 for MySQL, 1521 for Oracle)
+
+# DNS configuration
+on_premise_domain_name    = "corp.local"      # Replace with your internal domain
+on_premise_dns_server_ip1 = "192.168.1.10"   # Replace with your primary DNS server
+on_premise_dns_server_ip2 = "192.168.1.11"   # Replace with your secondary DNS server
 
 # Snowflake configuration
 # IMPORTANT: Get this from your Snowflake administrator

@@ -16,7 +16,11 @@ This ARM template creates:
 - Azure CLI configured with appropriate credentials
 - Azure subscription with necessary permissions
 - Existing Virtual Network
-- On-premise network connectivity established
+- Dedicated subnet for DNS resolver outbound endpoint (minimum /28)
+  - Must be delegated to Microsoft.Network/dnsResolvers
+  - Default subnet name: 'snet-dns-outbound'
+- On-premise network connectivity established (ExpressRoute or VPN)
+- On-premise DNS server IP addresses
 
 ## Quick Start
 
@@ -49,15 +53,16 @@ az deployment group create \
 - **vnetName**: Name of your Virtual Network
 - **vnetResourceGroup**: Resource group containing the VNet
 - **subnetName**: Name of the subnet for Private Link Service
-- **onPremDatabaseIp**: Private IP of on-premise database
-- **onPremDnsServer1**: IP of first on-premise DNS server
-- **onPremDnsServer2**: IP of second on-premise DNS server
+- **onPremDatabaseIP**: Private IP of on-premise database
+- **onPremDNSServerIP1**: IP of first on-premise DNS server
+- **onPremDNSServerIP2**: IP of second on-premise DNS server
 - **onPremDomainName**: Internal DNS domain (e.g., corp.local)
-- **privateLinkServiceAlias**: Alias for Private Link Service
 
 ### Optional Parameters
 
-- **databasePort**: Database port (default: 3306 for MySQL)
+- **databasePort**: Database port (default: 1433 for SQL Server, use 3306 for MySQL, 1521 for Oracle)
+- **privateLinkServiceAlias**: Alias for Private Link Service (default: snowflake-pls)
+- **dnsResolverSubnetName**: DNS resolver subnet name (default: snet-dns-outbound)
 - **location**: Azure region (default: resource group location)
 
 ## Outputs
@@ -66,7 +71,9 @@ After deployment completes, note these important outputs:
 
 - **privateLinkServiceId**: Provide this to Snowflake administrator
 - **privateLinkServiceAlias**: Provide this to Snowflake administrator
-- **loadBalancerPrivateIp**: Private IP of the load balancer
+- **loadBalancerPrivateIP**: Private IP of the load balancer
+- **dnsResolverOutboundEndpointId**: DNS resolver endpoint ID (for troubleshooting)
+- **dnsForwardingRulesetId**: DNS forwarding ruleset ID (for troubleshooting)
 
 ## Monitoring
 
@@ -105,6 +112,7 @@ az deployment group validate \
 2. Verify all parameter values are correct
 3. Ensure subscription has necessary permissions
 4. Check resource provider registrations
+5. Verify DNS resolver subnet exists and is delegated to Microsoft.Network/dnsResolvers
 
 ### Private Link Not Working
 
@@ -112,6 +120,14 @@ az deployment group validate \
 2. Check NSG rules allow traffic
 3. Confirm Private Link Service is in "Ready" state
 4. Validate Snowflake subscription ID is correct
+
+### DNS Resolution Issues
+
+1. Verify DNS resolver is provisioned successfully
+2. Check forwarding ruleset is linked to VNet
+3. Confirm on-premise DNS servers are reachable
+4. Test DNS resolution from Azure VMs in the VNet
+5. Verify domain name ends with dot in forwarding rule
 
 ## Best Practices
 
@@ -148,12 +164,25 @@ az deployment group create \
 
 ## Cleanup
 
-To delete all resources:
+To delete all deployed resources, delete the resource group or individual resources:
 
 ```bash
-az deployment group delete \
+# Delete individual resources
+az network private-link-service delete \
   --resource-group <your-resource-group> \
-  --name <deployment-name>
+  --name snowflake-onprem-pls
+
+az network lb delete \
+  --resource-group <your-resource-group> \
+  --name snowflake-onprem-slb
+
+az network dns-resolver delete \
+  --resource-group <your-resource-group> \
+  --name dns-resolver-hub
+
+az network nsg delete \
+  --resource-group <your-resource-group> \
+  --name snowflake-onprem-nsg
 ```
 
 **Warning**: This will permanently delete all resources. Ensure you have backups.

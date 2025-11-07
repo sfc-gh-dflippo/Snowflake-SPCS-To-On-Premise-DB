@@ -1,4 +1,4 @@
-## Chapter 8: Appendix: References
+# Chapter 8: References
 
 ### 8.1. Snowflake Documentation
 
@@ -84,10 +84,10 @@
 35. NACL for separate subnet attached to transit gateway | AWS re:Post, [https://repost.aws/questions/QUhzwj1\_YGTx2kUW1rcBFHiw/nacl-for-separate-subnet-attached-to-transit-gateway](https://repost.aws/questions/QUhzwj1_YGTx2kUW1rcBFHiw/nacl-for-separate-subnet-attached-to-transit-gateway)
 36. Why aren't the subnet network ACLs in my VPC allowing traffic through the transit gateway?, [https://repost.aws/knowledge-center/vpc-allow-tgw-traffic-from-subnet-nacls](https://repost.aws/knowledge-center/vpc-allow-tgw-traffic-from-subnet-nacls)
 37. Control subnet traffic with network access control lists \- Amazon Virtual Private Cloud, [https://docs.aws.amazon.com/vpc/latest/userguide/vpc-network-acls.html](https://docs.aws.amazon.com/vpc/latest/userguide/vpc-network-acls.html)
-38. How to get my container images to communicate with each other : r/snowflake \- Reddit, [https://www.reddit.com/r/snowflake/comments/1gqgf4v/how\_to\_get\_my\_container\_images\_to\_communicate/](https://www.reddit.com/r/snowflake/comments/1gqgf4v/how_to_get_my_container_images_to_communicate/)
+38. Networking for Snowpark Container Services - Snowflake Documentation, [https://docs.snowflake.com/en/developer-guide/snowpark-container-services/networking](https://docs.snowflake.com/en/developer-guide/snowpark-container-services/networking)
 39. ExpressRoute FAQ, [https://docs.azure.cn/en-us/expressroute/expressroute-faqs](https://docs.azure.cn/en-us/expressroute/expressroute-faqs)
 40. Configure ExpressRoute and S2S VPN coexisting connections: Azure portal, [https://learn.microsoft.com/en-us/azure/expressroute/how-to-configure-coexisting-gateway-portal](https://learn.microsoft.com/en-us/azure/expressroute/how-to-configure-coexisting-gateway-portal)
-41. Step-by-Step Guide to Setting Up Azure ExpressRoute Gateway for Dedicated Networks, [https://computertraining-online.com/editorial/step-by-step-guide-to-setting-up-azure-expressroute-gateway-for-dedicated-networks/](https://computertraining-online.com/editorial/step-by-step-guide-to-setting-up-azure-expressroute-gateway-for-dedicated-networks/)
+41. Create and modify an ExpressRoute gateway - Azure portal - Microsoft Learn, [https://learn.microsoft.com/en-us/azure/expressroute/expressroute-howto-add-gateway-portal-resource-manager](https://learn.microsoft.com/en-us/azure/expressroute/expressroute-howto-add-gateway-portal-resource-manager)
 42. Tutorial – Create & manage a VPN gateway – Azure portal \- Microsoft Learn, [https://learn.microsoft.com/en-us/azure/vpn-gateway/tutorial-create-gateway-portal](https://learn.microsoft.com/en-us/azure/vpn-gateway/tutorial-create-gateway-portal)
 43. Deploy a Hybrid DNS infrastructure with DNS Private Resolver \- StarWind, [https://www.starwindsoftware.com/blog/deploy-a-hybrid-dns-infrastructure-with-dns-private-resolver/](https://www.starwindsoftware.com/blog/deploy-a-hybrid-dns-infrastructure-with-dns-private-resolver/)
 44. Resolve Azure and on-premises domains. | Microsoft Learn, [https://learn.microsoft.com/en-us/azure/dns/private-resolver-hybrid-dns](https://learn.microsoft.com/en-us/azure/dns/private-resolver-hybrid-dns)
